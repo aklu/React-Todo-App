@@ -5,18 +5,17 @@ import "./TodoList.css";
 class TodoList extends Component {
 
     constructor(props){
-        //super points to the Component implementation. it just refers to the parent class constructor
-        //you cannot use this in a constructor until after you've called the parent constructor
-        //this allows the parent to run first just in case you try to call the child first in later code. It can be confusing to remember in a large project to javascript enforces it here
+        //super points to the Component implementation. it just refers to the parent class constructor. You cannot use this in a constructor until after you've called the parent constructor - this allows the parent to run first just in case you try to call the child first in later code. It can be confusing to remember in a large project to javascript enforces it here
         super(props);
 
-        //defining state object. Just defining an items array/property
         this.state = {
             items: []
         };
 
         //read the input and store into the array
         this.addItem = this.addItem.bind(this);
+
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
     addItem(e){
@@ -43,8 +42,18 @@ class TodoList extends Component {
 
     //by default, the page reloads and clears everything. We don't want that so we block this behavior. 
     e.preventDefault();
-}
+    }
 
+    deleteItem(key) {
+        //array of items that contains everything except the item we are removing
+        var filteredItems = this.state.items.filter(function (item) {
+            return (item.key !== key);
+        });
+
+        this.setState({
+            items: filteredItems
+        });
+    }
 
     render() {
         return (
@@ -58,7 +67,8 @@ class TodoList extends Component {
                         <button type="submit">Add</button>
                     </form>
                 </div>
-                <TodoItems entries={this.state.items}/>
+                <TodoItems entries={this.state.items}
+                           delete={this.deleteItem}/>
             </div>
         )
     }
